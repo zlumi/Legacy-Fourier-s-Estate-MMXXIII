@@ -47,17 +47,15 @@ if __name__ == "__main__":
     sequence = [2*(random()-0.5) + sum([amplitudes[i]*sin((2*pi)/T*x) for i,T in enumerate(periods)]) for x in np.arange(0, 5, 0.1)]
 
     data = fourier_transform(sequence)
+    np_data = np.fft.fft(sequence)
 
-    with open ('sequence.txt', 'w') as f:
-        for i in range(len(data)):
-            f.write(str(data[i]) + '\n')
+    plt.scatter(np.arange(0, len(data), 1), [abs(x) for x in data], color='red', label='dft', s=5)
+    plt.scatter(np.arange(0, len(np_data), 1), [abs(x) for x in np_data], color='green', label='np.fft', s=5)
 
-    plt.plot(sequence, color='red', label='signal sequence', linewidth=5)
-    plt.bar(np.arange(len(data)), np.abs(data), color='blue', label='dft', width=0.25)
-    plt.plot(inverse_fourier_transform(data), color='orange', label='inverse dft')
+    plt.plot(np.arange(0, len(data), 1), [abs(x) for x in data], color='red', label='dft', linewidth=0.5)
+    plt.plot(np.arange(0, len(np_data), 1), [abs(x) for x in np_data], color='green', label='np.fft', linewidth=0.5)
 
-    plt.bar(np.arange(len(data)), np.abs(np.fft.fft(sequence)), color='green', label='fft (numpy)', width=0.2)
-    plt.plot(np.fft.ifft(np.fft.fft(sequence)), color='purple', label='inverse fft (numpy)')
+    plt.plot(sequence, color='red', label='signal sequence', linewidth=0.5)
 
     plt.legend()
     plt.grid()
