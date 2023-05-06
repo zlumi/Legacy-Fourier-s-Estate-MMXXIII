@@ -1,24 +1,41 @@
 import matplotlib.pyplot as plt
-import numpy as np
 import cv2
-from luminance import luminance
-
+import numpy as np
+from luminance import to_grayscale
+from time import time
 import dft
 
-image = cv2.imread('resources/test_2.png')
-imageData = np.array([
-    [luminance(pixel) for pixel in row] for row in image
-])
+def transform_byRow(image, percentage_freqLim):
+    frequency_limit = int(len(image[0]) * (percentage_freqLim/100))
+    transformed_image = []
+    for i, row in enumerate(image):
+        transformed_image.append(dft.fourier_transform(row)[:frequency_limit] + [0]*(len(row)-frequency_limit))
+        print(f"[{i}/{len(image)}]", end='\r')
+    return transformed_image
 
-output = np.round(np.abs(np.fft.irfft2(np.fft.fft2(imageData))), 0)
-output = np.array([[row[i] for i in range(len(row)) if i % 2 == 0] for row in output])
-# output = np.array([[row[i] for i in range(len(row)) if i % 2 != 0] for row in output])
+def invTransform_byRow(image):
+    inverse_transformed_image = []
+    for i, row in enumerate(image):
+        inverse_transformed_image.append(dft.inverse_fourier_transform(row))
+        print(f"[{i}/{len(image)}]", end='\r')
+    return inverse_transformed_image
 
-# for x in ["in", "out"]:
-#     with open("./debug/" + x + ".csv", "w") as f:
-#         for row in [imageData, output][["in", "out"].index(x)]:
-#             f.write(",".join([str(x) for x in row]) + "\n")
+image = to_grayscale(cv2.imread('resources/test_5.png'))
 
-cv2.imwrite("./debug/out.png", output)
+print("Test began with image of shape", image.shape)
+
+plt.subplot(2, 5, 1)
+plt.imshow(image, cmap='gray')
+plt.title('Original')
+
+tests = [100, 75, 50, 25, 10, 8, 6, 4, 2]
+
+for p in tests:
+    t = time();     rTrnsfrmed = transform_byRow(image, p);          print(f"[R] Transformed in {time()-t} seconds")
+    t = time();     i_rTrnsfrmed = np.abs(invTransform_byRow(rTrnsfrmed));  print(f"[R] Inverse transformed in {time()-t} seconds")
+
+    plt.subplot(2, 5, tests.index(p)+2)
+    plt.imshow(i_rTrnsfrmed, cmap='gray')
+    plt.title(f'{p}%')
 
 plt.show()

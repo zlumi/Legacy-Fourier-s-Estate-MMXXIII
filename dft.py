@@ -1,6 +1,6 @@
 from numpy import sin, e, pi
 
-def fourier_transform(input_sequence):
+def fourier_transform(input_sequence:list):
     N = len(input_sequence)
     output_sequence = []
 
@@ -13,7 +13,7 @@ def fourier_transform(input_sequence):
 
     return output_sequence
 
-def inverse_fourier_transform(input_sequence):
+def inverse_fourier_transform(input_sequence:list):
     N = len(input_sequence)
     output_sequence = []
 
@@ -27,6 +27,9 @@ def inverse_fourier_transform(input_sequence):
     return output_sequence
 
 if __name__ == "__main__":
+    """
+    Testing module
+    """
 
     import numpy as np
     import matplotlib.pyplot as plt
@@ -38,15 +41,13 @@ if __name__ == "__main__":
 
     data = np.abs(fourier_transform(sequence))
     inv_data = inverse_fourier_transform(fourier_transform(sequence))
+    np_data = np.abs(np.fft.fft(sequence))
 
-    plt.plot(np.arange(0, len(data), 1), data, label='dft', marker="o", color='green', markersize=1, linewidth=0.5)
+    plt.plot(sequence, color='black', label='signal sequence', marker="o",markersize=0.75,linewidth=2,linestyle='dashed',dashes=(5,5))
+    plt.plot(np_data, color='red', label='fft (numpy)', marker="o",markersize=0.75,linewidth=2,linestyle='dashed',dashes=(5,5))
 
-    plt.plot(np.arange(0, len(sequence), 1), inv_data, label='inverse dft', marker="o", color='blue', markersize=1, linewidth=0.5)
-    plt.plot(sequence, color='black', label='signal sequence', marker="o", markersize=0.75, linewidth=1, linestyle='dashed', dashes=(5, 5))
-
-    with open("data.csv", "w") as f:
-        for i in range(len(sequence)):
-            f.write(f"{sequence[i]},{inv_data[i].real},{inv_data[i].imag}\n")
+    plt.plot(np.arange(0, len(data), 1),        data, label='dft',              marker="o",color='orange',markersize=1,linewidth=0.5)
+    plt.plot(np.arange(0, len(sequence), 1),    inv_data, label='inverse dft',  marker="o",color='blue',markersize=1,linewidth=0.5)
 
     plt.legend()
     plt.grid()

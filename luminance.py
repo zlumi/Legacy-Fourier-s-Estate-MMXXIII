@@ -1,4 +1,5 @@
 from math import sqrt
+import numpy as np
 
 def luminance(pixel, option=1, output_as_int=True):
 
@@ -18,3 +19,8 @@ def luminance(pixel, option=1, output_as_int=True):
             return 0.299*pixel[0] + 0.587*pixel[1] + 0.114*pixel[2]
         elif option == 3:
             return sqrt(0.241*pixel[0]**2 + 0.691*pixel[1]**2 + 0.068*pixel[2]**2)
+
+def to_grayscale(image, option=1):
+    return np.array([
+        [luminance(pixel, option) for pixel in row] for row in image
+    ])
