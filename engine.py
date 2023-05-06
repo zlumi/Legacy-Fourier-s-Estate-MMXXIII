@@ -1,41 +1,115 @@
 import matplotlib.pyplot as plt
 import cv2
 import numpy as np
+import plot
 from luminance import to_grayscale
 from time import time
-import dft
 
-def transform_byRow(image, percentage_freqLim):
-    frequency_limit = int(len(image[0]) * (percentage_freqLim/100))
-    transformed_image = []
-    for i, row in enumerate(image):
-        transformed_image.append(dft.fourier_transform(row)[:frequency_limit] + [0]*(len(row)-frequency_limit))
-        print(f"[{i}/{len(image)}]", end='\r')
-    return transformed_image
+from algorithms.by_row import dft_byRow, idft_byRow
 
-def invTransform_byRow(image):
-    inverse_transformed_image = []
-    for i, row in enumerate(image):
-        inverse_transformed_image.append(dft.inverse_fourier_transform(row))
-        print(f"[{i}/{len(image)}]", end='\r')
-    return inverse_transformed_image
+"""
 
-image = to_grayscale(cv2.imread('resources/test_5.png'))
+Example filetree:
+/root
+    /resources
+        test_1.png
+        test_2.png
+        test_3.png
+    /out
+        test_1.csv (made by this script)
 
-print("Test began with image of shape", image.shape)
+"""
 
-plt.subplot(2, 5, 1)
-plt.imshow(image, cmap='gray')
-plt.title('Original')
+def visual_test(transform, inverse, images:list, compression_levels:list):
+    for i in images:
+        i=i+1
 
-tests = [100, 75, 50, 25, 10, 8, 6, 4, 2]
+        image = to_grayscale(cv2.imread(f'resources/test_{i}.png'))
 
-for p in tests:
-    t = time();     rTrnsfrmed = transform_byRow(image, p);          print(f"[R] Transformed in {time()-t} seconds")
-    t = time();     i_rTrnsfrmed = np.abs(invTransform_byRow(rTrnsfrmed));  print(f"[R] Inverse transformed in {time()-t} seconds")
+        fig = plt.figure()
+        fig.suptitle(f'Testing image {i}, size {image.shape[1]}x{image.shape[0]}')
 
-    plt.subplot(2, 5, tests.index(p)+2)
-    plt.imshow(i_rTrnsfrmed, cmap='gray')
-    plt.title(f'{p}%')
+        t = time()
+        _transformed = transform(image)
+        print(f"[{transform.__name__}] ft in {time()-t} seconds")
 
-plt.show()
+        wanted_len = len(_transformed[0])
+
+        for p in compression_levels:
+            lim = int((p/100)*wanted_len)
+            _transformed = [x[:lim] for x in _transformed]
+            transformed = [row+[0]*(wanted_len-lim) for row in _transformed]
+
+            t = time()
+            compressed = np.abs(inverse(transformed))
+            print(f"[{inverse.__name__}] {p}% ift done in {time()-t} seconds")
+
+            # if p == 50:
+            #     with open(f'out/test_{i}.csv', 'w') as f:
+            #         for row in compressed:
+            #             f.write(','.join([str(x) for x in row])+'\n')
+
+            subplt = fig.add_subplot(2, 5, compression_levels.index(p)+1)
+            subplt.set_title(f'{p}%')
+            subplt.imshow(compressed, cmap='gray')
+            subplt.set_xticks([])
+            subplt.set_yticks([])
+
+    plt.show()
+
+def raw_speed_test(transform, inverse, images:list, compression_levels:list):
+    time_results = {'ft':{}, 'ift':{}}
+
+    for i in images:
+        i=i+1
+
+        image = to_grayscale(cv2.imread(f'resources/test_{i}.png'))
+        locator = f'test_{i}.png'
+        time_results['ift'][locator] = {}
+
+        t = time()
+        _transformed = transform(image)
+        time_results['ft'][str(image.shape[0]*image.shape[1])] = time()-t
+        print(f"[{transform.__name__}] ft in {time()-t} seconds")
+
+        wanted_len = len(_transformed[0])
+
+        for p in compression_levels:
+            lim = int((p/100)*wanted_len)
+            _transformed = [x[:lim] for x in _transformed]
+            transformed = [row+[0]*(wanted_len-lim) for row in _transformed]
+
+            t = time()
+            compressed = np.abs(inverse(transformed))
+            time_results['ift'][locator][p] = time()-t
+
+            print(f"[{inverse.__name__}] {p}% ift done in {time()-t} seconds")
+    
+    return time_results
+
+if __name__ == "__main__":
+
+    # visual_test(
+    #     dft_byRow, idft_byRow,
+    #     [1,2,3], 
+    #     [
+    #         100, 75, 50, 40, 30,
+    #         25, 20, 15, 10, 5
+    #     ]
+    # )
+
+    import json
+
+    test = raw_speed_test(
+        dft_byRow, idft_byRow,
+        [1,2,3],
+        [
+            100, 75, 50, 40, 30,
+            25, 20, 15, 10, 5
+        ]
+    )
+
+    with open('out/test_1.json', 'w') as f:
+        f.write(json.dumps(test, indent=4))
+    
+    plot.fromDict(test)
