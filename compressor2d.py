@@ -2,23 +2,31 @@ import numpy as np
 import cv2
 from matplotlib import pyplot as plt
 
-# Load the image as a grayscale 2D matrix
-# img = cv2.imread('figures/tree/tree_1000.jpeg', cv2.IMREAD_GRAYSCALE)
-img = cv2.imread('figures/sun/sun_1000.jpeg', cv2.IMREAD_GRAYSCALE)
+name = "crowd"
+wide = 1000
+removed = 0.05
 
-# Save the dimensions of the image
+img = cv2.imread(f'figures/{name}/{name}_{str(wide)}.jpeg', cv2.IMREAD_GRAYSCALE)
 M, N = img.shape
 
-# Compute the 2D discrete Fourier transform of the image
-dft = np.fft.fft2(img)
+dft = np.apply_along_axis(np.fft.fft, 0, np.apply_along_axis(np.fft.fft, 1, img))
 
-percentage_remaining = 0.01
+# dft[:int(M*removed), :int(N*removed)] = dft[int(M*(1-removed)):, :int(N*removed)] = dft[:int(M*removed), int(N*(1-removed)):] = dft[int(M*(1-removed)):, int(N*(1-removed)):] = 0
+# dft[int(M*removed):int(M*(1-removed)), :] = dft[:, int(N*removed):int(N*(1-removed))] = 0
 
-# use M and N to calculate how many outer rims to remove, and apply the removal to dft
-dft[int(M*percentage_remaining):int(M*(1-percentage_remaining)), int(N*percentage_remaining):int(N*(1-percentage_remaining))] = 0
+# v = 5
+# dft[v:, :] = dft[:, v:] = 0
+# dft[:M-v, :] = dft[:, :N-v] = 0
+# dft[v:, :] = dft[:, :N-v] = 0
+# dft[:M-v, :] = dft[:, v:] = 0
 
-# Compute the inverse Fourier transform of the DFT
-idft = np.fft.ifft2(dft)
+# v = 5
+# dftc = dft.copy()
+# dft[v:M-v, :] = dft[:, v:] = 0
+# dftc[v:M-v, :] = dftc[:, :-v] = 0
+
+idft = np.apply_along_axis(np.fft.ifft, 0, np.apply_along_axis(np.fft.ifft, 1, dft))
+# idftc = np.apply_along_axis(np.fft.ifft, 0, np.apply_along_axis(np.fft.ifft, 1, dftc))
 
 # Display the original image, DFT, and IDFT side-by-side
 fig, axs = plt.subplots(1, 3)
@@ -35,7 +43,12 @@ axs[1].set_title('DFT')
 axs[1].set_xticks([])
 axs[1].set_yticks([])
 
-axs[2].imshow(np.abs(idft), cmap = 'gray')
+# axs[1].imshow(idftc.real, cmap = 'gray')
+# axs[1].set_title('IDFT')
+# axs[1].set_xticks([])
+# axs[1].set_yticks([])
+
+axs[2].imshow(idft.real, cmap = 'gray')
 axs[2].set_title('IDFT')
 axs[2].set_xticks([])
 axs[2].set_yticks([])

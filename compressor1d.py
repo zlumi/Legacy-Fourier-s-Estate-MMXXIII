@@ -4,11 +4,11 @@ from matplotlib import pyplot as plt
 
 # trees, crowd, map, sun, map
 name = 'crowd'
-img = cv2.imread(f'figures/{name}/{name}_100.jpeg', cv2.IMREAD_GRAYSCALE)
+img = cv2.imread(f'figures/{name}/{name}_1000.jpeg', cv2.IMREAD_GRAYSCALE)
 
 N = img.shape[1]
 
-percentage_remaining = 0.75
+percentage_remaining = 0.1
 dft_rows = np.apply_along_axis(np.fft.fft, 1, img)
 dft_rows_b = dft_rows.copy()
 dft_rows_copy_bnt = dft_rows.copy()
@@ -23,13 +23,13 @@ plt.subplot(221),plt.imshow(img, cmap = 'gray')
 plt.title('Input Image'), plt.xticks([]), plt.yticks([])
 
 plt.subplot(222),plt.imshow(np.log(1 + np.abs(dft_rows)), cmap = 'gray')
-plt.title('DFT Rows'), plt.xticks([]), plt.yticks([])
+plt.title('Figure 4. Transformed Image'), plt.xticks([]), plt.yticks([])
 
 plt.subplot(223),plt.imshow(np.abs(idft_rows_b), cmap = 'gray')
-plt.title(f'IDFT Rows (lowest {percentage_remaining*100}% frequencies remaining)'), plt.xticks([]), plt.yticks([])
+plt.title(f'Figure 5. Inverse Transformed Image (lowest {percentage_remaining*100}% frequencies remaining)'), plt.xticks([]), plt.yticks([])
 
 plt.subplot(224),plt.imshow(np.abs(idft_rows_copy_bnt), cmap = 'gray')
-plt.title(f'IDFT Rows (low {percentage_remaining*50}% & top {percentage_remaining*50}% frequencies remaining)'), plt.xticks([]), plt.yticks([])
+plt.title(f'Figure 6. Inverse Transformed Image (low {percentage_remaining*50}% & top {percentage_remaining*50}% frequencies remaining)'), plt.xticks([]), plt.yticks([])
 
 fig = plt.gcf()
 fig.subplots_adjust(left=0.02, top=0.96, right=0.98, bottom=0.02)

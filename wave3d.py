@@ -1,25 +1,20 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from PIL import Image
+from math import pi
+import numpy.fft as fft
 
-# Open the image file
-img = Image.open('figures/sun/sun_100.jpeg').convert('L')
-
-# Convert the image data to a numpy array
-img_data = np.asarray(img)
-
-# Create a grid of x, y coordinates that correspond to the image dimensions
-y = np.arange(img_data.shape[0])
-x = np.arange(img_data.shape[1])
+periods = 1
+samples = 30
+x = np.linspace(0, 2*periods*pi, samples)
+y = np.linspace(0, 2*periods*pi, samples)
 x, y = np.meshgrid(x, y)
 
-# Create a 3D plot
+z = np.sin(x*2+y*5)
+z_transformed = fft.fft2(z)
+
+# plot z_transformed as a 3d surface, ignoring the complex part
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
-ax.plot_surface(x, y, img_data, cmap='gray')
+ax.plot_surface(x, y, np.abs(z_transformed), cmap='gray')
 
-ax.view_init(elev=90, azim=-90)
-plt.subplots_adjust(left=0, bottom=0, right=1, top=1, wspace=0, hspace=0)
-
-# Show the plot
 plt.show()

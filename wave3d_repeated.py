@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 from PIL import Image
 
 # Open the image file
-img = Image.open('figures/sun/sun_100.jpeg').convert('L')
+img = Image.open('figures/candle.jpg').convert('L')
+img = img.point(lambda x: x/4)
 
 # Convert the image data to a numpy array
 img_data = np.asarray(img)
@@ -23,6 +24,9 @@ ax.plot_surface(x, y, new_img_data, cmap='gray')
 
 ax.view_init(elev=90, azim=-90)
 plt.subplots_adjust(left=0, bottom=0, right=1, top=1, wspace=0, hspace=0)
+plt.axis('off')
+
+ax.set_zlim(0, 500)
 
 # Show the plot
 plt.show()
