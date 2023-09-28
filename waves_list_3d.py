@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 fig = plt.figure(figsize=(12, 12))
-fig.suptitle('Figure 11: 2D-DFT Multiplier Matrix Visualized (own work)', fontsize=16)
+fig.suptitle('Figure 9: 2D-DFT Multiplier Matrix Visualized (own work)', fontsize=16)
 
 x = np.linspace(0, 10, 100)
 y = np.linspace(0, 10, 100)
@@ -17,5 +17,5 @@ for i in range(4):
         ax.set_title(f'u={i}, v={j}', fontsize=10)
 
 plt.subplots_adjust(hspace=0.4, wspace=0)
-plt.savefig('figure_11.png')
+plt.savefig('figure_9.png')
 plt.show()

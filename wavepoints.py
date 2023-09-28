@@ -7,7 +7,7 @@ def cos_wave(x, freq, length):
 array_length = 5
 
 fig, axs = plt.subplots(5)
-fig.suptitle('Figure 10: 1D-DFT Multiplier Matrix Visualized (own work)', fontsize=16)
+fig.suptitle('Figure 8: 1D-DFT Multiplier Matrix Visualized (own work)', fontsize=16)
 
 
 for k in range(5):

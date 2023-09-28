@@ -6,16 +6,15 @@ from mpl_toolkits.mplot3d import Axes3D
 img = Image.open('figures/candle.jpg').convert('L')
 data = np.array(img)
 
-# Create a 1x2 subplot grid. Adjust the size and spacing as needed.
 fig, axs = plt.subplots(1, 2, figsize=(10, 5))
 
-# Display the image in black and white on the left subplot.
 axs[0].imshow(data, cmap='gray')
-axs[0].axis('off')  # Hide axes for the left subplot.
+axs[0].axis('off')
+axs[0].set_title('Figure 1a: Candle (Smabs)\nblack/white binarized, down sampled')
 
-# Create a 3D plot on the right subplot.
 ax = fig.add_subplot(122, projection='3d')
 axs[1].axis('off')
+axs[1].set_title('Figure 1b: 3D histogram by intensity (own work)')
 x, y = data.shape
 
 cmap = plt.get_cmap('gray')

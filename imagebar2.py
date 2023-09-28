@@ -8,6 +8,9 @@ data = np.array(img)
 # Create a 1x2 subplot grid. Adjust the size and spacing as needed.
 fig, axs = plt.subplots(1, 2, figsize=(10, 5), gridspec_kw={'width_ratios': [1, 4]})
 
+# big title for the figure with padding 10
+fig.suptitle('Figure 2: Demonstration of how repetitions of an image leads to periodicity (own work)', fontsize=16, y=0.95, x=0.5)
+
 # Create a 2D bar plot on the left subplot.
 x = data.shape[1]
 y = data[10]
