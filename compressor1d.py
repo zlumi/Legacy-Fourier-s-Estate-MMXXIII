@@ -19,7 +19,7 @@ dft_rows_b[:, int(N*percentage_remaining):] = 0
 idft_rows_b = np.apply_along_axis(np.fft.ifft, 1, dft_rows_b)
 
 plt.subplot(321),plt.imshow(img, cmap = 'gray')
-plt.title('Input Image'), plt.xticks([]), plt.yticks([])
+plt.title('Input Image (Nielsen)'), plt.xticks([]), plt.yticks([])
 
 plt.subplot(323),plt.imshow(np.log(1 + np.abs(dft_rows)), cmap = 'gray')
 plt.title('Figure 4. Transformed Image (DFT, absolute value)'), plt.xticks([]), plt.yticks([])

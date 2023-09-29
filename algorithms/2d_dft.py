@@ -1,14 +1,25 @@
-from numpy import sin, e, pi
+from numpy import e, pi
 
-def fourier_transform_2d(input_sequence):
-    N = len(input_sequence)
-    output_sequence = []
+def dft(image: list[list[int]], u:int, v:int):
+    W = len(image)
+    H = len(image[0])
 
-    for k in range(N):
-        output_sequence.append(
-            sum([
-                input_sequence[n] * e**(-2j*pi*k*n/N) for n in range(N)
-            ])
-        )
+    return sum([
+        sum([
+            image[n][m] * e**(-2j*pi*(u*n/W + v*m/H))
+            for n in range(W)
+        ])
+        for m in range(H)
+    ])
 
-    return output_sequence
+def idft(dft_image: list[list[int]], u:int, v:int):
+    W = len(dft_image)
+    H = len(dft_image[0])
+
+    return sum([
+        sum([
+            dft_image[n][m] * e**(2j*pi*(v*m/H + u*n/W))
+            for m in range(H)
+        ])
+        for n in range(W)
+    ])
