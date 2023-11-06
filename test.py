@@ -10,7 +10,7 @@ signals = [
 ]
 
 fig, axs = plt.subplots(3, 1, figsize=(8, 10))
-fig.suptitle('Figure 14: DFTs - Real, Imaginary parts; conjugate symmetry')
+fig.suptitle('Figure 5: DFTs - Real, Imaginary parts; conjugate symmetry (own work)')
 
 for i, signal in enumerate(signals):
     fft_array = fft.fft(signal)
@@ -26,4 +26,5 @@ for i, signal in enumerate(signals):
     ])
 
 fig.subplots_adjust(top=0.95, bottom=0.05, left=0.05, right=0.95, hspace=0.2,)
+plt.savefig('figure5.png')
 plt.show()

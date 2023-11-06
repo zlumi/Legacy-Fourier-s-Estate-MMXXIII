@@ -1,6 +1,6 @@
 from numpy import e, pi
 
-def dft(image: list[list[int]], u:int, v:int):
+def dft_2d(image: list[list[int]], u:int, v:int):
     W = len(image)
     H = len(image[0])
 
@@ -12,7 +12,7 @@ def dft(image: list[list[int]], u:int, v:int):
         for m in range(H)
     ])
 
-def idft(dft_image: list[list[int]], u:int, v:int):
+def idft_2d(dft_image: list[list[int]], u:int, v:int):
     W = len(dft_image)
     H = len(dft_image[0])
 
@@ -23,3 +23,4 @@ def idft(dft_image: list[list[int]], u:int, v:int):
         ])
         for n in range(W)
     ])
+
