@@ -23,4 +23,3 @@ def idft_2d(dft_image: list[list[int]], n:int, m:int):  # (n,m) = position of pi
             for v in range(H)                           # ) for all v part of the array of frequencies along the height
         ]) for u in range(W)                            # ) for all u part of the array of frequencies along the width
     ])
-

@@ -4,7 +4,7 @@ from scipy import fftpack
 import matplotlib.pyplot as plt
 from math import pi, sqrt
 
-for name in ['trees']:
+for name in ['crowd']:
     for res in [1000, 500, 100]:
         img = cv2.imread(f'figures/{name}/{name}_{res}.jpeg', cv2.IMREAD_GRAYSCALE)
 
@@ -14,8 +14,8 @@ for name in ['trees']:
         fig, axs = plt.subplots(ny,nx)
 
         for I, new_size in enumerate([
-            0.75,0.50,0.40,0.30,
-            0.20,0.15,0.10,0.05,
+            1.00,0.75,0.50,0.40,
+            0.30,0.20,0.10,0.05,
             0.04,0.03,0.02,0.01
         ]):
             DFT_matrix = fftpack.fft2(img)
@@ -40,10 +40,12 @@ for name in ['trees']:
             axs[axscoord].axis('off')
 
         plt.tight_layout()
-        plt.subplots_adjust(left=0, right=1, top=0.95, bottom=0)
-        plt.get_current_fig_manager().full_screen_toggle()
-        plt.suptitle(f'{name}.jpeg at {img.shape[1]}x{img.shape[0]}pixels')
-        plt.savefig(f'out/{name}_{res}.png')
+        plt.subplots_adjust(left=0, right=1, top=0.95, bottom=0, wspace=0.01)
+        # plt.get_current_fig_manager().full_screen_toggle()
+        plt.suptitle(f'image of {name}, sized at {img.shape[1]}px x {img.shape[0]}px')
+        # plt.savefig(f'out/{name}_{res}.png'
+
+        plt.show()
 
 # import subprocess
 # import os
